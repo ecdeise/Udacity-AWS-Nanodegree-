@@ -3,13 +3,16 @@
     - Failover should typically take between 60-120 seconds though this is variable and will depend on the database activities. (e.g., a large transaction may result in an increase in failover time). 
 
 
-- Minimum RTO for a single region outage : 15-30 mins
-    - Should a region outage occur SRE staff will need to manually promote the read replica in the secondary/standby region to primary status. In the event that this event occurs off-hours we may assume that it will take 5-15 minutes for an SRE to be alerted and responsive and another 10-15 for the modification to undertaken (login, promotion of read replica, etc.)
+- Minimum RTO for a single region outage : 15-60 mins
+    - Should a region outage occur SRE staff will need to manually promote the read replica in the secondary/standby region to primary status. In the event that this event occurs off-hours we may assume that it will take 5-30 minutes for an SRE to be alerted and responsive and another 10-30 for the modification to undertaken (login, promotion of read replica, etc.)
 
-- Minimum RPO for a single AZ outage : Instantaneous (0 downtime)
-    - Multi-Az configurations provide a synchronous standby of the primary DB so we should expect no loss of data whatsoever.
+- Minimum RPO for a single AZ outage : 60-120 seconds
+    - It will take (roughly) 60-120 seconds to failover to another AZ, so roughly 60-120 seconds of data would be lost..
 
-- Minimum RPO for a single region outage : None 
-    - A single region outage would present no issue as we have a read replica available in another region. 
-    - No loss of data would be expected.
+- Minimum RPO for a single region outage: read-replica configuration dependent + RTO(roughly one hour). (4+ hours?)
+    - If rds automation is enabled the RPO will be tied to the configuration. So, for example, if we've scheduled for 4 hours, minimum RPO would 4 hours + RTO - so, roughly 5 hours.
+
+
+Revisions made based on reviewer commentary.
+
 
